@@ -13,16 +13,18 @@ import {
 import clsx from "clsx";
 import { Fragment, useRef, useState ,useEffect} from "react";
 
+import { PlusIcon } from "@heroicons/react/20/solid";
+
 // Local Imports
 import { TableSortIcon } from "components/shared/table/TableSortIcon";
 import { ColumnFilter } from "components/shared/table/ColumnFilter";
 import { PaginationSection } from "components/shared/table/PaginationSection";
-import { Card, Table, THead, TBody, Th, Tr, Td } from "components/ui";
+import { Button, Card, Table, THead, TBody, Th, Tr, Td } from "components/ui";
 import {
   useBoxSize,
   useLockScrollbar,
-  useDidUpdate,
   useLocalStorage,
+  useDidUpdate,
 } from "hooks";
 import { fuzzyFilter } from "utils/react-table/fuzzyFilter";
 import { useSkipper } from "utils/react-table/useSkipper";
@@ -33,13 +35,31 @@ import { ordersList } from "./data";
 import { Toolbar } from "./Toolbar";
 import { useThemeContext } from "app/contexts/theme/context";
 import { getUserAgentBrowser } from "utils/dom/getUserAgentBrowser";
+import { useDisclosure } from "hooks";
+import { useNavigate } from "react-router";
+//import { useNavigate } from "react-router";
+
+
+//import PropTypes from "prop-types";
+import {
+  Dialog,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+
+//import { NewLead } from "./NewLead";
 import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
 const isSafari = getUserAgentBrowser() === "Safari";
 
-export default function OrdersTable() {
+export default function OrdersDatatableV2() {
+  const navigate = useNavigate();
+  //const [loading, setLoading] = useState(true);
+  const [isOpen, {  close }] = useDisclosure(false);
   const { cardSkin } = useThemeContext();
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
@@ -58,12 +78,12 @@ export default function OrdersTable() {
   const [sorting, setSorting] = useState([]);
 
   const [columnVisibility, setColumnVisibility] = useLocalStorage(
-    "column-visibility-orders-3",
+    "column-visibility-orders-2",
     {},
   );
 
   const [columnPinning, setColumnPinning] = useLocalStorage(
-    "column-pinning-orders-3",
+    "column-pinning-orders-2",
     {},
   );
 
@@ -126,32 +146,108 @@ export default function OrdersTable() {
 
   useLockScrollbar(tableSettings.enableFullScreen);
 
+  
 
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const { data: response } = await axios.get('https://localhost:7257/api/Lead');
+          setOrders(response);
+           
+          //setLoading(false);
+           
+          console.log("response", response);
+        } catch (error) {
+          console.error(error)
+        }
+        
+      };
   
-  
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const { data: response } = await axios.get('https://localhost:7257/api/Lead');
-            setOrders(response);
-             
-            //setLoading(false);
-             
-            console.log("response", response);
-          } catch (error) {
-            console.error(error)
-          }
-          
-        };
-    
-        fetchData();
-      }, []);
+      fetchData();
+    }, []);
+
+
+
+  //   const newLead= () => {
+  //           alert("sdfasdf");
+  //       // Navigate('/dashboards/addlead')
+  //       // return <Navigate to={'/dashboards/addlead'} />;
+       
+  // }
 
   return (
-    <div className="col-span-12">
+    //----------------------------------
+    
+    //--------------------------
+    <div className="transition-content grid grid-cols-1 grid-rows-[auto_auto_1fr] px-(--margin-x) py-4">
+      
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-[100]" onClose={close}>
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-900/50 backdrop-blur transition-opacity dark:bg-black/40" />
+          </TransitionChild>
+
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out transform-gpu transition-transform duration-200"
+            enterFrom="translate-x-full"
+            enterTo="translate-x-0"
+            leave="ease-in transform-gpu transition-transform duration-200"
+            leaveFrom="translate-x-0"
+            leaveTo="translate-x-full"
+          >
+            <DialogPanel className="fixed right-0 top-0 flex h-full w-72 transform-gpu flex-col bg-white transition-transform duration-200 dark:bg-dark-700">
+             
+            <Button
+                      onClick={close}
+                      variant="flat"
+                      isIcon
+                      className="size-6 rounded-full ltr:-mr-1.5 rtl:-ml-1.5"
+                    >
+                      <XMarkIcon className="size-4.5" />
+                    </Button>
+              <div className="h-24">
+              
+              </div>
+              <div className="flex space-x-4 px-4 ">
+                
+             
+              </div>
+              <hr className="mx-5 my-4 h-px border-gray-200 dark:border-dark-500" />
+              
+               
+            </DialogPanel>
+          </TransitionChild>
+        </Dialog>
+      </Transition>
+       
+      <div className="flex items-center justify-between space-x-4 ">
+        <div className="min-w-0">
+          <h2 className="truncate text-xl font-medium tracking-wide text-gray-800 dark:text-dark-50">
+            Lead History
+          </h2>
+        </div>
+        <Button    onClick={() => navigate('/dashboards/addlead')}
+          className="h-8 space-x-1.5 rounded-md px-3 text-xs "
+          color="primary"
+        >
+          <PlusIcon className="size-5" />
+          <span>New Lead</span>
+        </Button>
+      </div>
+       
       <div
         className={clsx(
-          "flex flex-col",
+          "flex flex-col pt-4",
           tableSettings.enableFullScreen &&
             "fixed inset-0 z-61 h-full w-full bg-white pt-3 dark:bg-dark-900",
         )}
@@ -226,8 +322,7 @@ export default function OrdersTable() {
                         className={clsx(
                           "relative border-y border-transparent border-b-gray-200 dark:border-b-dark-500",
                           row.getIsExpanded() && "border-dashed",
-                          row.getIsSelected() &&
-                            !isSafari &&
+                          row.getIsSelected() && !isSafari &&
                             "row-selected after:pointer-events-none after:absolute after:inset-0 after:z-2 after:h-full after:w-full after:border-3 after:border-transparent after:bg-primary-500/10 ltr:after:border-l-primary-500 rtl:after:border-r-primary-500",
                         )}
                       >

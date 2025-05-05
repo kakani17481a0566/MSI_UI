@@ -14,7 +14,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { useCallback, useState } from "react";
+import {  useCallback, useState } from "react";
 import PropTypes from "prop-types";
 
 // Local Imports
@@ -26,10 +26,10 @@ import { Button } from "components/ui";
 const confirmMessages = {
   pending: {
     description:
-      "Are you sure you want to delete this order? Once deleted, it cannot be restored.",
+      "Are you sure you want to delete this Lead? Once deleted, it cannot be restored.",
   },
   success: {
-    title: "Order Deleted",
+    title: "Lead Deleted",
   },
 };
 
@@ -64,7 +64,7 @@ export function RowActions({ row, table }) {
   return (
     <>
       <div className="flex justify-center">
-        
+
         <Menu as="div" className="relative inline-block text-left">
           <MenuButton
             as={Button}

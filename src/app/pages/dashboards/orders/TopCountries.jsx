@@ -1,69 +1,33 @@
 // Local Imports
 //import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { Card } from "components/ui";
+import { useState,useEffect } from "react";
+import axios from 'axios';
+
 
 // ----------------------------------------------------------------------
 
-const countries = [
-  {
-    uid: "1",
-    flag: "/images/flags/svg/rounded/australia.svg",
-    name: "Branch 1",
-    sales: "11",
-    impression: 2,
-  },
-  {
-    uid: "2",
-    flag: "/images/flags/svg/rounded/brazil.svg",
-    name: "Branch 2",
-    sales: "7",
-    impression: 1,
-  },
-  {
-    uid: "3",
-    flag: "/images/flags/svg/rounded/china.svg",
-    name: "Branch 3",
-    sales: "5",
-    impression: 1,
-  },
-  {
-    uid: "4",
-    flag: "/images/flags/svg/rounded/india.svg",
-    name: "Branch 4",
-    sales: "5",
-    impression: -1,
-  },
-  {
-    uid: "5",
-    flag: "/images/flags/svg/rounded/italy.svg",
-    name: "Branch 5",
-    sales: "4",
-    impression: 1,
-  },
-  {
-    uid: "6",
-    flag: "/images/flags/svg/rounded/japan.svg",
-    name: "Branch 6",
-    sales: "3",
-    impression: 1,
-  },
-  {
-    uid: "7",
-    flag: "/images/flags/svg/rounded/russia.svg",
-    name: "Branch 7",
-    sales: "1",
-    impression: -1,
-  },
-  {
-    uid: "8",
-    flag: "/images/flags/svg/rounded/spain.svg",
-    name: "Branch 8",
-    sales: "1",
-    impression: 1,
-  },
-];
+
 
 export function TopCountries() {
+
+  const[branches,setBranches] =useState([{"uid":'',"flag":'',"name":'',"totalCount":0,"convertedCount":0}]);
+      // const [loading, setLoading] = useState(true);
+    
+  
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const { data: response } = await axios.get('https://localhost:7257/api/LeadSummary/LeadCountByBranch-SuccessPercentage  ');
+          setBranches(response);
+          console.log("response", response);
+        } catch (error) {
+          console.error(error)
+        }
+      };
+      fetchData();
+    },[]);
   return (
     <Card className="px-4 pb-5 sm:px-5">
       <div className="flex h-14 min-w-0 items-center justify-between py-3">
@@ -79,23 +43,23 @@ export function TopCountries() {
         <p className="text-xs-plus">Branchs</p>
       </div>
       <div className="mt-5 space-y-4">
-        {countries.map((country) => (
+        {branches.map((branch) => (
           <div
-            key={country.uid}
+            key={branch.uid}
             className="flex items-center justify-between gap-2"
           >
             <div className="flex min-w-0 items-center gap-2">
-              <img className="size-6" src={country.flag} alt={country.name} />
+              <img className="size-6" src={branch.flag} alt={branch.name} />
               <a
                 href="##"
                 className="truncate transition-opacity hover:opacity-80"
               >
-                {country.name}
+                {branch.name}
               </a>
             </div>
             <div className="flex items-center gap-2">
               <p className="text-sm-plus text-gray-800 dark:text-dark-100">
-                {country.sales} /  {country.impression}
+                {branch.totalCount} /  {branch.convertedCount}
               </p>
                
             </div>

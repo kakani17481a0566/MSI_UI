@@ -52,6 +52,18 @@ const protectedRoutes = {
               }),
             },
             {
+              path: "addlead",
+              lazy: async () => ({
+                Component: (await import("app/pages/dashboards/addlead")).default,
+              }),
+            },
+            {
+              path: "lead",
+              lazy: async () => ({
+                Component: (await import("app/pages/dashboards/leads")).default,
+              }),
+            },
+            {
               path: "leads",
               lazy: async () => ({
                 Component: (await import("app/pages/dashboards/orders")).default,

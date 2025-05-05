@@ -87,13 +87,7 @@ const chartConfig = {
     width: 2,
     colors: ["transparent"],
   },
-  plotOptions: {
-    bar: {
-      borderRadius: 4,
-      barHeight: "90%",
-      columnWidth: "35%",
-    },
-  },
+  plotOptions: {},
   legend: {
     show: false,
   },
@@ -112,12 +106,18 @@ const chartConfig = {
       enabled: false,
     },
   },
+  markers: {
+    size: 5,
+    hover: {
+      size: 8,
+    },
+  },
   grid: {
     padding: {
-      left: 0,
+      left: 10,
       right: 0,
-      top: 0,
-      bottom: 0,
+      top: -30,
+      bottom: -8,
     },
   },
   yaxis: {
@@ -149,8 +149,9 @@ const chartConfig = {
  
 
 export function Overview() {
-  const [focusRange, setfocusRange] = useState("monthly");
+  const [focusRange, setfocusRange] = useState("yearly");
   const [loading, setLoading] = useState(true);
+  const [LeadTotals, setLeadTotals] = useState({"totalLeads":0,"convertedLeads":0,  "inProcessLeads":0,"nonConverted":0});
   const chartOptions = JSON.parse(JSON.stringify(chartConfig));
   chartOptions.xaxis.categories =data[focusRange].categories;
   const [Leaddata, setLeadData] = useState({"totalCount":0,"inProcess":0,"converted":0,"nonConverted":0});
@@ -158,8 +159,9 @@ export function Overview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: response } = await axios.get('https://localhost:7257/api/Lead/LeadStatus');
+        const { data: response } = await axios.get('https://localhost:7257/api/LeadSummary/LeadStats');
         setLeadData(response);
+        setLeadTotals(response.leadTotals);
         setLoading(false);
         data=response;
         chartOptions.xaxis.categories=data[focusRange].categories;
@@ -187,7 +189,7 @@ export function Overview() {
           name="options"
           value={focusRange}
           onChange={setfocusRange}
-          className="hidden gap-2 sm:flex"
+          className="hidden gap-2 sm:flex"  
         >
           <Radio as={Fragment} value="monthly">
             {({ checked }) => (
@@ -218,7 +220,8 @@ export function Overview() {
         <div className="rounded-lg bg-gray-100 p-3 dark:bg-surface-3 2xl:p-4">
           <div className="flex justify-between space-x-1">
             <p className="text-xl font-semibold text-gray-800 dark:text-dark-100">
-              67  
+            { loading && (0)} 
+            { !loading && LeadTotals.totalLeads}  
             </p>
             <CurrencyDollarIcon className="this:secondary size-5 text-this dark:text-this-light" />
           </div>
@@ -228,7 +231,7 @@ export function Overview() {
           <div className="flex justify-between space-x-1">
             <p className="text-xl font-semibold text-gray-800 dark:text-dark-100">
             { loading && (0)} 
-            { !loading && Leaddata.leadStats.totalCount}
+            { !loading && LeadTotals.convertedLeads}
             </p>
             <CheckBadgeIcon className="this:success size-5 text-this dark:text-this-light" />
           </div>
@@ -237,7 +240,8 @@ export function Overview() {
         <div className="rounded-lg bg-gray-100 p-3 dark:bg-surface-3 2xl:p-4">
           <div className="flex justify-between space-x-1">
             <p className="text-xl font-semibold text-gray-800 dark:text-dark-100">
-              6
+            { loading && (0)} 
+            { !loading && LeadTotals.inProcessLeads}
             </p>
             <ArrowPathIcon className="this:primary size-5 text-this dark:text-this-light" />
           </div>
@@ -246,11 +250,12 @@ export function Overview() {
         <div className="rounded-lg bg-gray-100 p-3 dark:bg-surface-3 2xl:p-4">
           <div className="flex justify-between space-x-1">
             <p className="text-xl font-semibold text-gray-800 dark:text-dark-100">
-              345
+            { loading && (0)} 
+            { !loading && LeadTotals.nonConverted}
             </p>
             <ClockIcon className="this:warning size-5 text-this dark:text-this-light" />
           </div>
-          <p className="mt-1 text-xs-plus">Pending</p>
+          <p className="mt-1 text-xs-plus">Closed</p>
         </div>
       </div>
 

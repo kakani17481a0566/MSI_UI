@@ -1,4 +1,5 @@
 import { HomeIcon } from '@heroicons/react/24/outline';
+import WindowIcon from 'assets/nav-icons/window.svg?react'
 import DashboardsIcon from 'assets/dualicons/dashboards.svg?react'
 import { NAV_TYPE_ROOT, NAV_TYPE_ITEM } from 'constants/app.constant'
 
@@ -16,43 +17,27 @@ export const dashboards = {
     childs: [
         {
             id: 'dashboards.home',
-            path: path(ROOT_DASHBOARDS, '/home'),
+            path: path(ROOT_DASHBOARDS, '/leads'),
             type: NAV_TYPE_ITEM,
             title: 'Home',
-            transKey: 'nav.dashboards.home',
+            transKey: '',
             Icon: HomeIcon,
         },
         {
-            id: 'dashboards.ceo', // Unique identifier
-            path: 'dashboards/ceo', // Route path
-            type: NAV_TYPE_ITEM, // Item type (NAV_TYPE_ITEM, NAV_TYPE_ROOT, or NAV_TYPE_COLLAPSE)
-            title: 'CEO', // Title
-            transKey: 'CEO', // Translation key (optional)
-            Icon: HomeIcon, // Icon component (optional)
+            id: 'dashboards.addlead',
+            path: path(ROOT_DASHBOARDS, '/addlead'),
+            type: NAV_TYPE_ITEM,
+            title: 'Add Lead',
+            transKey: '',
+            Icon: WindowIcon,
         },
         {
-            id: 'dashboards.franchise', // Unique identifier
-            path: 'dashboards/franchise', // Route path
-            type: NAV_TYPE_ITEM, // Item type (NAV_TYPE_ITEM, NAV_TYPE_ROOT, or NAV_TYPE_COLLAPSE)
-            title: 'Franchise', // Title
-            transKey: 'Franchise', // Translation key (optional)
-            Icon: HomeIcon, // Icon component (optional)
-        },
-        {
-            id: 'dashboards.teacher', // Unique identifier
-            path: 'dashboards/teacher', // Route path
-            type: NAV_TYPE_ITEM, // Item type (NAV_TYPE_ITEM, NAV_TYPE_ROOT, or NAV_TYPE_COLLAPSE)
-            title: 'Teacher', // Title
-            transKey: 'Teacher', // Translation key (optional)
-            Icon: HomeIcon, // Icon component (optional)
-        },
-        {
-            id: 'dashboards.orders', // Unique identifier
-            path: 'dashboards/leads', // Route path
-            type: NAV_TYPE_ITEM, // Item type (NAV_TYPE_ITEM, NAV_TYPE_ROOT, or NAV_TYPE_COLLAPSE)
-            title: 'Leads', // Title
-            transKey: 'Leads', // Translation key (optional)
-            Icon: HomeIcon, // Icon component (optional)
+            id: 'dashboards.leads',
+            path: path(ROOT_DASHBOARDS, '/lead'),
+            type: NAV_TYPE_ITEM,
+            title: 'Lead',
+            transKey: '',
+            Icon: WindowIcon,
         },
 
     ]

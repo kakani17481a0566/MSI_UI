@@ -9,75 +9,37 @@ import {
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 //import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { Fragment } from "react";
+import { Fragment, useState,useEffect } from "react";
 
 // Local Imports
 import { Button, Card } from "components/ui";
-import { formatNumber } from "utils/formatNumber";
+// import { formatNumber } from "utils/formatNumber";
+import axios from 'axios';
+
+
 
 // ----------------------------------------------------------------------
 
-const channels = [
 
-  {
-    uid: "1",
-    logo: "/images/logos/instagram-round.svg",
-    name: "Instagram",
-    views: 34358,
-    impression: 2,
-  },
-  {
-    uid: "2",
-    logo: "/images/logos/facebook-round.svg",
-    name: "Facebook",
-    views: 24616,
-    impression: 3,
-  },
-  {
-    uid: "3",
-    logo: "/images/logos/tik_tok-round.svg",
-    name: "Tik Tok",
-    views: 17363,
-    impression: -1,
-  },
-  {
-    uid: "4",
-    logo: "/images/logos/twitter-round.svg",
-    views: 49318,
-    name: "Twitter",
-    impression: 5,
-  },
-  {
-    uid: "5",
-    logo: "/images/logos/pinterest-round.svg",
-    name: "Pinterest",
-    views: 6917,
-    impression: 1,
-  },
-  {
-    uid: "6",
-    logo: "/images/logos/discord-round.svg",
-    name: "Discord",
-    views: 639,
-    impression: -3,
-  },
-  {
-    uid: "7",
-    logo: "/images/logos/youtube-round.svg",
-    name: "Youtube",
-    views: 5391,
-    impression: 1,
-  },
-  {
-    uid: "8",
-    logo: "/images/logos/tumblr-round.svg",
-    name: "Tumblr",
-    views: 144,
-    impression: 1,
-  },
-];
 
 export function SocialTraffic() {
+  const[channels,setChannels] =useState([{"uid":'',"logo":'',"name":'',"views":0,"impression":''}]);
+    // const [loading, setLoading] = useState(true);
+  
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: response } = await axios.get('https://localhost:7257/api/LeadSummary/lead-count-by-source-current-year');
+        setChannels(response);
+        console.log("response", response);
+      } catch (error) {
+        console.error(error)
+      }
+    };
+    fetchData();
+  },[]);
   return (
     <Card className="px-4 pb-5 sm:px-5">
       <div className="flex h-14 min-w-0 items-center justify-between py-3">
@@ -112,7 +74,7 @@ export function SocialTraffic() {
             </div>
             <div className="flex items-center gap-2">
               <p className="text-sm-plus text-gray-800 dark:text-dark-100">
-                {formatNumber(channel.views, 2)} / {channel.impression}
+                {channel.views} / {channel.impression}
               </p>
               
             </div>

@@ -45,6 +45,11 @@ export function Header() {
       )}
     >
       <SidebarToggleBtn />
+      <img
+  src="https://res.cloudinary.com/kakani7/image/upload/v1746172182/MSI/yqjbpqtuvuf0co08zai4.svg"
+  alt="Header Logo"
+  style={{ height: "300px", width: "300px", objectFit: "contain" }}
+/>
 
       <div className="flex items-center gap-2 ltr:-mr-1.5 rtl:-ml-1.5">
         <Search
